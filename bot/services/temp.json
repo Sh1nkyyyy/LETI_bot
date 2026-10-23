@@ -1,0 +1,21 @@
+{
+    'id': 7830394, 
+    'subject': 'Вопросы к промежуточному экзамену', 
+    'content': '<p>Вопросы</p>', 
+    'dict_work_department_id': None, 
+    'date': '2026-10-14 20:58:41', 
+    'files': [{'id': 974214, 'name': 'вопросы-0', 'original_name': 'вопросы-0', 'ext': 'doc', 'description': '',https://lk.etu.ru/dashboard/api/download/974214
+    'date': '2026-10-1420:58:41', 
+    'url': 'https://lk.etu.ru/dashboard/api/download/974214'}], 
+    'user': {'id': 20194, 'first_name': 'Алла', 'second_name': 'Рынская', 'middle_name': 'Константиновна', 'fio': 'Рынская Алла Константиновна', 
+    'initials': 'Рынская\xa0А.\xa0К.', 
+    'position': 'Сотрудник', 
+    'additional_info': '', 
+    'is_show_in_contact_list': 1, 
+    'photo_id': None, 'photo_url': 
+    '/assets/images/student-3-4.jpeg', 
+    'educations': [], 
+    'positions': [{'department': 'каф.АМ', 'position': 'доцент кандидат наук', 'functions': []}], 
+    'has_active_distant_education_application': False}, 
+    'is_read': 1
+}
