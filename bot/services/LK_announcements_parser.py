@@ -34,7 +34,7 @@ async def fetch_announcements():
                     tzinfo=ZoneInfo("Europe/Moscow")
                 )
                 
-                if announcement_dt < (datetime.now(ZoneInfo("Europe/Moscow"))) - timedelta(hours=1):
+                if announcement_dt > (datetime.now(ZoneInfo("Europe/Moscow"))) - timedelta(hours=1):
                     
                     documents = []
                     docs_urls = []
@@ -62,9 +62,10 @@ async def fetch_announcements():
                             documents.append(document)
                         
                     cleaned_announcement = {
-                        "author": announcement.get("fio"),
+                        "author": announcement["user"]["fio"],
                         "date": announcement["date"],
                         "text": announcement["content"].replace("<p>", "").replace("</p>", "").replace("<br>", "\n").strip(),
+                        "theme": announcement['subject'],
                         "files": documents,
                         "files_urls": docs_urls
                     }

@@ -9,8 +9,6 @@ temp/
 tmp/
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
 Thumbs.db
 Desktop.ini
 .DS_Store

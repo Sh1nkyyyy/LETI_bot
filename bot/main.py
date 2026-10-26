@@ -9,6 +9,7 @@ from handlers import start_router
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiogram import Bot, F, Dispatcher
 from services.notificator import notify
+from aiogram.types import LinkPreviewOptions
 
 
 async def run_parser_job():
@@ -22,7 +23,7 @@ async def main():
     
     bot = Bot(
         token=config.bot_token.get_secret_value(),
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML, link_preview=LinkPreviewOptions(is_disabled=True)),
     )
     
     dp = Dispatcher()
@@ -31,7 +32,7 @@ async def main():
     
     
     scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
-    scheduler.add_job(notify, trigger="cron", minute="*/5", args=(bot,))
+    scheduler.add_job(notify, trigger="cron", minute=0, args=(bot,))
     scheduler.start()
     
     await bot.delete_webhook(drop_pending_updates=True)
