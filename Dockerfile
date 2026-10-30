@@ -3,12 +3,12 @@ FROM python:3.13-slim
 ENV TZ=Europe/Moscow
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app
+WORKDIR /bot
 
 
 COPY requirements.txt .
-RUN pip install --no--cached-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "main.py"]
+CMD ["python", "bot/main.py"]

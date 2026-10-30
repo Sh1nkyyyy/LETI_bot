@@ -6,8 +6,11 @@ from services.cleaner_html import clean_lk_html_for_telegram
 from templates import formatting_RK_message, formatting_LK_announcements
 
 
-rc_chat_id = "-1003337617897"
-notifications_chat_id = "-1003337617897"
+rc_chat_id = "-1003953624678"
+rc_message_thread_id = "3375"
+notifications_chat_id = "-1003953624678"
+notifications_message_thread_id = "3378"
+
 
 async def notify(bot: Bot):
     rocket_chat_messages = await fetch_messages()
@@ -17,6 +20,7 @@ async def notify(bot: Bot):
                 try:
                     await bot.send_message(
                         chat_id=rc_chat_id,
+                        message_thread_id=rc_message_thread_id,
                         **formatting_RK_message(chat, msg['author'], msg['text'], msg['date'])
                     )
                 except Exception as e:
@@ -30,6 +34,7 @@ async def notify(bot: Bot):
             try:
                 await bot.send_message(
                     chat_id=notifications_chat_id,
+                    message_thread_id=notifications_message_thread_id,
                     **formatting_LK_announcements(msg["theme"], msg['author'], clean_lk_html_for_telegram(msg['text']), msg['date'])
                 )
             except Exception as e:
