@@ -4,12 +4,11 @@ from aiogram.utils.formatting import (
     Text,
     TextLink,
     BlockQuote,
-    as_list,
-    as_section,
-    as_marked_section,
     CustomEmoji
 )
 
+LK_URL = "https://lk.etu.ru/student#/announcements/inbox"
+RC_URL = "https://student-chat.moevm.pro/"
 def formatting_RK_message(
     chat: str,
     author: str,
@@ -31,7 +30,7 @@ def formatting_RK_message(
         CustomEmoji("📣", custom_emoji_id="5260268501515377807")," ", Bold(chat_name), "\n",
         CustomEmoji("👤", custom_emoji_id="5260399854500191689"), " ", Italic(author), "\n\n",
         BlockQuote(text), "\n\n",
-        CustomEmoji("⛓️", custom_emoji_id="5260730055880876557"), " ", TextLink("рокет-чат", url="https://student-chat.moevm.pro/"),
+        CustomEmoji("⛓️", custom_emoji_id="5260730055880876557"), " ", TextLink("рокет-чат", url=RC_URL),
     ).as_kwargs()
     
     return content   
@@ -45,11 +44,9 @@ def formatting_LK_announcements(
     if author == False or author == "None":
         author = "Неизвестный автор"
     
-    content = Text(
-        CustomEmoji("📣", custom_emoji_id="5260268501515377807")," ", Bold(theme), "\n",
-        CustomEmoji("👤", custom_emoji_id="5260399854500191689"), " ", Italic(author), "\n\n",
-        f"<blockquote>{text}</blockquote>", "\n\n",
-        CustomEmoji("⛓️", custom_emoji_id="5260730055880876557"), " ", TextLink("уведы в лк", url="https://lk.etu.ru/student#/announcements/inbox"),
-    ).as_kwargs()
+    content = ( f'<tg-emoji emoji-id="5260268501515377807">📣</tg-emoji> <b>{theme}</b>\n'
+               f'<tg-emoji emoji-id="5260399854500191689">👤</tg-emoji> <i>{author}</i>\n\n'
+               f"<blockquote>{text}</blockquote>\n\n" 
+               f'<tg-emoji emoji-id="5260730055880876557">⛓️</tg-emoji> <a href="LK_URL">уведы в лк</a>' )
     
-    return content               
+    return {"text": content, "parse_mode": "HTML"}             
