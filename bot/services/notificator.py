@@ -1,5 +1,4 @@
 from aiogram import Bot
-import aiohttp
 from services.LK_announcements_parser import fetch_announcements
 from services.RC_parser import fetch_messages
 from services.cleaner_html import clean_lk_html_for_telegram
@@ -30,22 +29,22 @@ async def notify(bot: Bot):
     lk_notifications = await fetch_announcements()
     if lk_notifications:
         for msg in lk_notifications:
-            text = clean_lk_html_for_telegram(msg["text"])
             try:
                 await bot.send_message(
                     chat_id=notifications_chat_id,
                     message_thread_id=notifications_message_thread_id,
-                    **formatting_LK_announcements(msg["theme"], msg['author'], clean_lk_html_for_telegram(msg['text']), msg['date'])
+                    **formatting_LK_announcements(msg["theme"], msg['author'], msg['text'], msg['date'])
                 )
             except Exception as e:
-                print(f"Не удалось отправить уведомление {rc_chat_id}: {e}", text)    
+                print(f"Не удалось отправить уведомление {notifications_chat_id}: {e}", msg['text'])    
             for file in msg["files"]:
                 try:
                     await bot.send_document(
                         chat_id=notifications_chat_id,
+                        message_thread_id=notifications_message_thread_id,
                         document=file,
                     )
                 except Exception as e:
-                    print(f"Не удалось отправить файл {rc_chat_id}: {e}")
+                    print(f"Не удалось отправить файл {notifications_chat_id}: {e}")
 
         

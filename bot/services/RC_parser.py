@@ -1,6 +1,4 @@
 import aiohttp
-import asyncio
-import json
 from datetime import datetime, timezone, timedelta
 
 from config_data.config import config
@@ -27,8 +25,8 @@ async def fetch_messages():
         for room_name, room_id in rooms.items():
             query_params = {
                 "roomId": room_id,
-                "oldest": ((datetime.now(timezone.utc)) - timedelta(hours=1)).replace(
-                    minute=0, second=0, microsecond=0
+                "oldest": ((datetime.now(timezone.utc)) - timedelta(seconds=3600*48)).replace(
+                    minute=0, hour=0, microsecond=0
                     ).isoformat(timespec="milliseconds").replace("+00:00", "Z"),
             }
             
@@ -37,6 +35,7 @@ async def fetch_messages():
             if msgs:
                 new_msgs[room_name] = msgs
                 
+        print(new_msgs)
         return new_msgs
         
         
@@ -59,6 +58,9 @@ async def check_room(session: aiohttp.client.ClientSession, query_params):
                     
                     user_info = message.get("u", {})
                     
+                    if user_info["username"] not in config.rc_teachers:
+                        continue
+                    
                     clean_msg = {
                         "text": message.get("msg", "").strip(),
                         "date": message.get("ts"),
@@ -68,13 +70,6 @@ async def check_room(session: aiohttp.client.ClientSession, query_params):
                     cleaned_messages.append(clean_msg)
                     
                 return cleaned_messages
-                
-                
-                
-                
-
-if __name__ == "__main__":
-   asyncio.run(fetch_messages())
     
 
 

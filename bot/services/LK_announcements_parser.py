@@ -3,13 +3,16 @@ import asyncio
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from aiogram.types import BufferedInputFile
+from services.cleaner_html import clean_lk_html_for_telegram
+
+from config_data.config import config
 
 URL = "https://lk.etu.ru/api/user-announcement?current_page=1&page_size=5&total_entries=0"
 DOWNLOAD_URL = "https://lk.etu.ru/dashboard/api/download/"
     
 cookies = {
-    "XSRF-TOKEN": "eyJpdiI6IjZxMjhKb0dUR1JLcTBSTzVWQ2NHSkE9PSIsInZhbHVlIjoid08xMVZoL1g1Y3BWSnpQdURSKzhuT1JHeFd4K1ZGdFRlb1VicUZVYmtmUlNWTExzNXNZU2xNU1FKRE9CdHZrUUhoSG13ZDBwZ0hOYTNrY3dTQnc4YTE0Yk9xK2ltRk0vdWZ3SkpTTG9BY0RvMlB0bWt1bjZSNUF2K2duSCtWVUgiLCJtYWMiOiIwODZlYTIxN2FkYmUyYzg4MTIwMmM0M2I4NjI2OWUwMmEzMTYyYjg3MmZmZDc3ZDA4YWQ2YTFmYWM3YzAzZmNhIiwidGFnIjoiIn0%3D",
-    "lk_etu_ru_session": "eyJpdiI6InV1cXdBWm5xSTZybFlsclF2ZFpTQ0E9PSIsInZhbHVlIjoiY0plSTA5Q3EySnFTcVU3VDh3VGZXeFo5aSs1TVhOWlEyRnRUYWs4RGFpSmNkNHpIM3BGQ0NWazNEa0NKZm5iMG5DWVNpNExhUXRXVStPcXY2OWZ2S09aN29UZ2dIQ29nZk5aN0NQN2lqaW1KMnZrVUIrdkx3cStqWkFXd25BL0QiLCJtYWMiOiIwMDQ2NmU5MWNiNmZkMjI1NzlkYmQ3YmM5OTNkYWQwYzc4Mzg3ZjFkOTFiNTcxNWE2YjU3MGQ2ZGU5MDI5Yjk2IiwidGFnIjoiIn0%3D"
+    "XSRF-TOKEN": config.lk_xsrf_token.get_secret_value(),
+    "lk_etu_ru_session": config.lk_cookie_session.get_secret_value() 
 }
 
 headers = {
@@ -34,7 +37,7 @@ async def fetch_announcements():
                     tzinfo=ZoneInfo("Europe/Moscow")
                 )
                 
-                if announcement_dt > (datetime.now(ZoneInfo("Europe/Moscow"))) - timedelta(hours=1):
+                if announcement_dt > (datetime.now(ZoneInfo("Europe/Moscow"))) - timedelta(seconds=config.parser_check_interval):
                     
                     documents = []
                     docs_urls = []
@@ -64,7 +67,7 @@ async def fetch_announcements():
                     cleaned_announcement = {
                         "author": announcement["user"]["fio"],
                         "date": announcement["date"],
-                        "text": announcement["content"].replace("<p>", "").replace("</p>", "").replace("<br>", "\n").strip(),
+                        "text": clean_lk_html_for_telegram(announcement["content"]),
                         "theme": announcement['subject'],
                         "files": documents,
                         "files_urls": docs_urls
